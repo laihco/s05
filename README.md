@@ -1,40 +1,29 @@
-# Section 5 – Refactoring Code Smells in Practice
+S05: Activity – Analyze & Refactor
 
-This activity is designed to help you practice identifying code smells and applying refactoring patterns to a real codebase in CMPM 121, Game Development Patterns.
+Identified code smells
 
-## Assignment Instructions
+Duplicated code: The three button handlers (increment/decrement/reset) repeated the same UI update steps.
 
-For this assignment, your task is to **analyze and improve the code in `src/main.ts`**:
+Unclear names: Variables like c, a, b, h, bI, bD, bR make it hard to understand when they are referenced later.
 
-1. **Identify code smells**: Review the code and look for patterns that may cause maintenance issues, reduce readability, or introduce potential bugs.
-2. **Refactor**: Apply **refactoring patterns** as described in Fowler’s _Refactoring_ book to improve the code.
-3. **Document your work**: Once you have completed your refactoring:
-   - Rewrite this README.md
-   - List the **code smells** you identified
-   - Describe the **refactoring patterns** you applied and how they improved the code
+Global mutable state: c had no safety net against inconsistent updates.
 
-## Getting Started
+Refactorings Applied (Fowler)
 
-With Codespaces (or another environment supporting devcontainers):
+Rename Variable
+c → count, a/b/h → IDS/HEADING_TEXT, bI/bD/bR → incBtn/decBtn/resetBtn, etc.
 
-1. Run `deno task dev` to start the development server
+Replace Magic Number/Literal with Symbolic Constant
+Introduced IDS, HEADING_TEXT, TITLE_PREFIX, and BG so IDs/text/colors live in one place.
 
-Without Codespaces (local VS Code):
+Extract Function
+Created a single render() to perform all UI updates (counter text, title, background).
 
-1. Install the [Deno](https://docs.deno.com/runtime/getting_started/installation/) runtime.
-2. Install the Deno VS Code extension (must be done only after installing Deno runtime).
-3. Run `./setup-hooks.sh` to enable pre-commit quality checks
-4. Run `deno task dev` to start the development server
+Encapsulate Variable
+Added setCount(next) so all state changes to count pass through one spot and trigger render().
 
-The setup script configures Git hooks to automatically run formatting, linting, and type checking before commits.
+Why This Improved the Code
 
-## Deployment
+Maintainability: UI updates live in one place and only requires editing render() or constants.
 
-This project is configured for automatic deployment to GitHub Pages using GitHub Actions.
-
-### Setup GitHub Pages Deployment
-
-1. Go to your repository's Settings → Pages
-2. Under "Source", select "GitHub Actions"
-3. The workflow will automatically deploy on pushes to the `main` branch
-4. Your site will be published at `https://<your-github-username>.github.io/<repository-name>/`
+Readability: Clear names and grouped constants make the program easier to understand.
